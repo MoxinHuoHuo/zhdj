@@ -1,0 +1,11 @@
+.idea/
+.settings/
+.myeclipse/
+target/
+*.class
+.classpath
+*.iml
+
+.project
+.tern-project
+MP_verify_OGBP6LSEMMCB1Yyd.txt

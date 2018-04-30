@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.TastMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.Tast">
+		<id column="tast_id" property="tastId" jdbcType="INTEGER" />
+		<result column="tast_content" property="tastContent" jdbcType="VARCHAR" />
+		<result column="test_url" property="testUrl" jdbcType="VARCHAR" />
+		<result column="sent_id" property="sentId" jdbcType="INTEGER" />
+		<result column="receive_id" property="receiveId" jdbcType="INTEGER" />
+		<result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+		<result column="check_id" property="checkId" jdbcType="INTEGER" />
+		<result column="start_time" property="startTime" jdbcType="VARCHAR" />
+		<result column="finish_time" property="finishTime" jdbcType="VARCHAR" />
+		<result column="receive_unit" property="receiveUnit" jdbcType="INTEGER" />
+		<result column="self_type" property="selfType" jdbcType="INTEGER" />
+		<result column="history" property="history" jdbcType="INTEGER" />
+		<result column="url_name" property="urlName" jdbcType="VARCHAR" />
+		<result column="tast_title" property="tastTitle" jdbcType="VARCHAR" />
+		<result column="tast_tree_name" property="tastTreeName"
+			jdbcType="VARCHAR" />
+		<result column="tast_type" property="tastType" jdbcType="VARCHAR" />
+		<result column="finish_ok" jdbcType="INTEGER" property="finishOk" />
+		<result column="real_finish_time" jdbcType="VARCHAR" property="realFinishTime" />
+		<result column="creat_tast_time" property="creatTastTime"
+			jdbcType="VARCHAR" />
+		<result column="only_type" property="onlyType" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 个人获取组织信息 -->
+	<resultMap id="PerTreeResultMap" type="com.zeng.zhdj.wy.entity.Tast"
+		extends="BaseResultMap">
+		<association property="userNode" javaType="com.zeng.zhdj.wy.entity.User"
+			column="receive_id" select="com.zeng.zhdj.wy.dao.UserMapper.selectByPrimaryKey"></association>
+		<association property="node" javaType="com.zeng.zhdj.wy.entity.TreeNode"
+			column="receive_unit" select="com.zeng.zhdj.wy.dao.TreeMapper.getNodeAndPowerIdById"></association>
+	</resultMap>
+	<!-- 组织获取组织信息 -->
+	<resultMap id="UnitTreeResultMap" type="com.zeng.zhdj.wy.entity.Tast"
+		extends="BaseResultMap">
+		<association property="node" javaType="com.zeng.zhdj.wy.entity.TreeNode"
+			column="receive_unit" select="com.zeng.zhdj.wy.dao.TreeMapper.getNodeAndPowerIdById"></association>
+	</resultMap>
+	<!-- 关联计划 -->
+	<resultMap id="SubmitResultMap" type="com.zeng.zhdj.wy.entity.Tast"
+		extends="BaseResultMap">
+		<association property="submit" javaType="com.zeng.zhdj.wy.entity.TreeNode"
+			column="tast_id" select="com.zeng.zhdj.wy.dao.SubmitMapper.selectByTastId"></association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		tast_id, tast_content, test_url, sent_id, receive_id,
+		creat_time, check_id,
+		start_time,
+		finish_time, receive_unit, self_type,
+		url_name, tast_title,
+		tast_tree_name,tast_type,finish_ok,real_finish_time,history,only_type
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tast
+		where tast_id = #{tastId,jdbcType=INTEGER}
+	</select>
+	<select id="selectByTreeId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tast
+		where tast_id = #{tastId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from tast
+		where tast_id = #{tastId,jdbcType=INTEGER}
+	</delete>
+	<!-- 根據发送者id查找私人任务 -->
+	<select id="selectSelfTast" resultMap="SubmitResultMap"
+		parameterType="com.zeng.zhdj.wy.entity.vo.PageVo">
+		select
+		<include refid="Base_Column_List" />
+		from tast
+
+		where self_type = 1 and sent_id =
+		#{userId,jdbcType=INTEGER}
+
+		limit
+		#{page},#{rows}
+	</select>
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.Tast">
+		insert into tast (tast_id,
+		tast_content, test_url,
+		sent_id, receive_id, creat_time,
+		check_id,
+		start_time, finish_time,
+		receive_unit, self_type,
+		url_name,
+		tast_title,
+		tast_tree_name,
+		tast_type, finish_ok)
+		values
+		(#{tastId,jdbcType=INTEGER}, #{tastContent,jdbcType=VARCHAR},
+		#{testUrl,jdbcType=VARCHAR},
+		#{sentId,jdbcType=INTEGER},
+		#{receiveId,jdbcType=INTEGER}, #{creatTime,jdbcType=TIMESTAMP},
+		#{checkId,jdbcType=INTEGER}, #{startTime,jdbcType=VARCHAR},
+		#{finishTime,jdbcType=VARCHAR},
+		#{receiveUnit,jdbcType=INTEGER},
+		#{selfType,jdbcType=INTEGER},
+		#{urlName,jdbcType=VARCHAR},
+		#{tastTitle,jdbcType=VARCHAR},
+		#{tastTreeName,jdbcType=VARCHAR},
+		#{tastType,jdbcType=VARCHAR},
+		#{finishOk,jdbcType=INTEGER})
+	</insert>
+	<!-- 通过任务下达返回标题和onlytype -->
+	<select id="TastOnlyType" resultType="java.util.HashMap"
+		parameterType="java.lang.Integer">
+		select  
+		distinct tast_title,only_type
+		from tast
+		where sent_id =
+		#{id,jdbcType=INTEGER}
+	</select>
+	<!-- 获取文件url -->
+	<select id="SelectUrl" resultType="java.lang.String"
+		parameterType="java.lang.Integer">
+		select
+		test_url
+		from tast
+		where tast_id =
+		#{tastId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectTastreceiveUnit" resultType="Integer"
+		parameterType="java.lang.Integer">
+		select
+		IFNULL(receive_unit,0)
+
+		from tast
+		where tast_id =
+		#{tastId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectTastonlyBytastType" resultType="String"
+		parameterType="java.lang.String">
+		select
+		distinct tast_title
+		from tast
+		where only_type =
+		#{tastType,jdbcType=VARCHAR}
+	</select>
+
+	
+	<update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.Tast">
+		update tast
+		set
+		tast_content = #{tastContent,jdbcType=VARCHAR},
+		test_url =
+		#{testUrl,jdbcType=VARCHAR},
+		sent_id = #{sentId,jdbcType=INTEGER},
+		receive_id = #{receiveId,jdbcType=INTEGER},
+		creat_time =
+		#{creatTime,jdbcType=TIMESTAMP},
+		check_id =
+		#{checkId,jdbcType=INTEGER},
+		start_time =
+		#{startTime,jdbcType=VARCHAR},
+		finish_time =
+		#{finishTime,jdbcType=VARCHAR},
+		receive_unit =
+		#{receiveUnit,jdbcType=INTEGER},
+		self_type =
+		#{selfType,jdbcType=INTEGER},
+
+		url_name = #{urlName,jdbcType=VARCHAR},
+		tast_title =
+		#{tastTitle,jdbcType=VARCHAR},
+		tast_tree_name =
+		#{tastTreeName,jdbcType=VARCHAR}
+		where tast_id =
+		#{tastId,jdbcType=INTEGER}
+	</update>
+
+	<!-- 批量下达任务 -->
+	<insert id="insertByList" parameterType="java.util.List">
+
+		<foreach collection="list" item="item" index="index">
+			insert into tast
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="item.urlName != null">
+					url_name,
+				</if>
+				<if test="item.tastTitle != null">
+					tast_title,
+				</if>
+				<if test="item.tastContent != null">
+					tast_content,
+				</if>
+				<if test="item.testUrl != null">
+					test_url,
+				</if>
+				<if test="item.sentId != null">
+					sent_id,
+				</if>
+				<if test="item.receiveId != null">
+					receive_id,
+				</if>
+
+				<if test="item.checkId != null">
+					check_id,
+				</if>
+				<if test="item.startTime != null">
+					start_time,
+				</if>
+				<if test="item.finishTime != null">
+					finish_time,
+				</if>
+				<if test="item.selfType != null">
+					self_type ,
+				</if>
+				<if test="item.receiveUnit != null">
+					receive_unit,
+				</if>
+				<if test="item.tastType != null">
+					tast_type,
+				</if>
+				<if test="item.creatTastTime != null">
+					creat_tast_time,
+				</if>
+				<if test="item.history != null">
+					history,
+				</if>
+				<if test="item.onlyType != null">
+					only_type,
+				</if>
+
+			</trim>
+			<trim prefix="values (" suffix=");" suffixOverrides=",">
+				<if test="item.urlName != null">
+					#{item.urlName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.tastTitle != null">
+					#{item.tastTitle,jdbcType=VARCHAR},
+				</if>
+
+				<if test="item.tastContent != null">
+					#{item.tastContent,jdbcType=VARCHAR},
+				</if>
+				<if test="item.testUrl != null">
+					#{item.testUrl,jdbcType=VARCHAR},
+				</if>
+				<if test="item.sentId != null">
+					#{item.sentId,jdbcType=INTEGER},
+				</if>
+				<if test="item.receiveId != null">
+					#{item.receiveId,jdbcType=INTEGER},
+				</if>
+
+				<if test="item.checkId != null">
+					#{item.checkId,jdbcType=INTEGER},
+				</if>
+				<if test="item.startTime != null">
+					#{item.startTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.finishTime != null">
+					#{item.finishTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.selfType != null">
+					#{item.selfType,jdbcType=INTEGER},
+				</if>
+				<if test="item.receiveUnit != null">
+					#{item.receiveUnit,jdbcType=INTEGER},
+				</if>
+				<if test="item.tastType != null">
+					#{item.tastType,jdbcType=VARCHAR},
+
+				</if>
+				<if test="item.creatTastTime != null">
+					#{item.creatTastTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.history != null">
+					#{item.history,jdbcType=INTEGER},
+				</if>
+				<if test="item.onlyType != null">
+					#{item.onlyType,jdbcType=INTEGER},
+				</if>
+			</trim>
+		</foreach>
+	</insert>
+	<!-- 个人接收任务 -->
+	<select id="selectPageListUseDyc" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="PerTreeResultMap">
+		select
+		*
+		from tast
+		<where>
+			<if test="paramEntity != null and paramEntity.receiveUnit >0 ">or receive_unit = #{paramEntity.receiveUnit}</if>
+			<if test="paramEntity != null and paramEntity.receiveId >0">or receive_id = #{paramEntity.receiveId}</if>
+			<if test="paramEntity != null and paramEntity.tastType !=null">or tast_type = #{paramEntity.tastType}</if>
+			<if test="paramEntity != null and paramEntity.sentId !=null">or sent_id = #{paramEntity.sentId}</if>
+			<if test="paramEntity != null and paramEntity.selfType !=null">and self_type= #{paramEntity.selfType}</if>
+			<if test="paramEntity != null and paramEntity.history !=null">and history= #{paramEntity.history}</if>
+
+
+
+
+		</where>
+		limit #{start},#{rows}
+	</select>
+
+	<!-- 根据任务主键获取分页的tast -->
+	<select id="selectTastByTastIdList" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="PerTreeResultMap">
+		select
+		*
+		from tast
+		where tast_type in
+		<if test="paramEntity != null and paramEntity.tastIdList !=null ">
+			<foreach collection="paramEntity.tastIdList" item="tastId"
+				index="index" open="(" close=")" separator=",">
+				#{tastId}
+			</foreach>
+		</if>
+
+		ORDER BY creat_time DESC
+
+	</select>
+
+	<!-- 组织接收任务 -->
+	<select id="selectPageListUnit" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="UnitTreeResultMap">
+		select
+		*
+		from tast
+		<where>
+			<if test="paramEntity != null and paramEntity.receiveId >0">and receive_id = #{paramEntity.receiveId}</if>
+
+			<if test="paramEntity != null and paramEntity.receiveUnit >0 ">and receive_unit = #{paramEntity.receiveUnit}
+			</if>
+			<if test="paramEntity != null and paramEntity.history !=null">and history= #{paramEntity.history}</if>
+		</where>
+	</select>
+	<!-- 计算任务 -->
+	<select id="selectPageCount" resultType="java.lang.Integer"
+		parameterType="com.zeng.zhdj.unity.Page">
+		select
+		count(*)
+		from tast
+		<where>
+			<if test="paramEntity != null and paramEntity.receiveId >0">or receive_id = #{paramEntity.receiveId}</if>
+
+			<if test="paramEntity != null and paramEntity.receiveUnit >0 ">or receive_unit = #{paramEntity.receiveUnit}
+			</if>
+			<if test="paramEntity != null and paramEntity.history !=null">and history= #{paramEntity.history}</if>
+		</where>
+	</select>
+	<update id="updateFinishOk" parameterType="com.zeng.zhdj.wy.entity.Tast">
+		update tast
+		set
+		finish_ok =
+		#{finishOk,jdbcType=INTEGER},
+		real_finish_time =
+		#{realFinishTime,jdbcType=INTEGER}
+
+		where tast_id =
+		#{tastId,jdbcType=INTEGER}
+	</update>
+	<select id="countTast" resultType="Map" parameterType="com.zeng.zhdj.wy.entity.Tast">
+		SELECT
+		sum(if(finish_ok = 1, 1, 0)) AS Finish,
+		sum(if(finish_ok is null
+		or finish_ok = 0, 1,
+		0)) AS unFinish,
+		sum(if(finish_time &lt;
+		real_finish_time, 1, 0)) AS
+		longFinish
+		FROM tast
+		<where>
+			<if test="receiveUnit != null">and
+				receive_unit=#{receiveUnit,jdbcType=INTEGER}
+			</if>
+			<if test="tastType != null">and
+				tast_type=#{tastType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 转为历史任务 -->
+	<update id="makeHistory" parameterType="java.lang.Integer">
+		update tast
+		set
+		history = 1
+		where tast_id =
+		#{tastId,jdbcType=INTEGER}
+	</update>
+
+</mapper>

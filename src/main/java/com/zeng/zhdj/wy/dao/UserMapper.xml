@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.UserMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.User">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="tree_id" property="treeId" jdbcType="INTEGER" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="creat_time" property="creatTime" jdbcType="VARCHAR" />
+		<result column="history" property="history" jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 登录接口 -->
+	<resultMap id="usertologin" type="com.zeng.zhdj.wy.entity.User"
+		extends="BaseResultMap">
+		<association property="node" javaType="com.zeng.zhdj.wy.entity.TreeNode"
+			column="tree_id" select="com.zeng.zhdj.wy.dao.TreeMapper.getNodeAndPowerIdById"></association>
+		<association property="role" javaType="com.zeng.zhdj.wy.entity.Role"
+			column="role_id" select="com.zeng.zhdj.wy.dao.RoleMapper.selectByPrimaryKey"></association>	
+	</resultMap>
+	<!-- 获取权限 及用户信息 -->
+	<resultMap id="PowerGet" type="com.zeng.zhdj.wy.entity.User"
+		extends="BaseResultMap">
+		<association property="role" javaType="com.zeng.zhdj.wy.entity.Role"
+			column="role_id" select="com.zeng.zhdj.wy.dao.RoleMapper.selectByPrimaryKey"></association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id, tree_id, tel, password, user_name, creat_time,
+		history, role_id
+	</sql>
+	<sql id="Base_Column_Listq">
+		tree_id, tel, user_name,user_id,role_id
+	</sql>
+	<!-- 通过条件查询，并且按时间排序 -->
+	<select id="selectPageListUseDyc" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="usertologin">
+		select
+		<include refid="Base_Column_Listq" />
+		from user
+		<where>
+			<if test="paramEntity.userName!=null">and user_name like #{paramEntity.userName}</if>
+			<if test="paramEntity.userId!=null">and user_id = #{paramEntity.userId}</if>
+			<if test="paramEntity.treeId!=null">and tree_id = #{paramEntity.treeId}</if>
+			<if test="paramEntity.tel!=null">and tel like #{paramEntity.tel}</if>
+
+			<if test="paramEntity.history!=null">and history = #{paramEntity.history}</if>
+			<if test="paramEntity.history==null">and history = 0</if>
+
+		</where>
+		<if test="page> 0">limit #{start},#{rows}</if>
+		
+	</select>
+
+	<select id="selectPageCount" resultType="java.lang.Integer"
+		parameterType="com.zeng.zhdj.unity.Page">
+		select
+		count(*)
+		from user
+		where 1=1
+		<if test="paramEntity!=null and paramEntity.tel!=null"> and tel=#{paramEntity.tel}</if>
+		<if test="paramEntity!=null and paramEntity.treeId!=null"> and tree_id=#{paramEntity.treeId}</if>
+		<if test="paramEntity!=null and paramEntity.userName!=null"> and user_name=#{paramEntity.userName}</if>
+	</select>
+	<!-- 登录验证 -->
+	<select id="selectlogin" parameterType="com.zeng.zhdj.wy.entity.User"
+		resultMap="usertologin">
+		select * from user where tel = #{tel,jdbcType=VARCHAR}and
+		password = #{password,jdbcType=VARCHAR}
+	</select>
+	<!-- 检查手机号码是否存在 -->
+	<select id="checkTel" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from user where tel =
+		#{tel,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByPrimaryKey" resultMap="usertologin"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectAllAdmin" resultMap="usertologin">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where role_id = 2 or role_id=6
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from user
+		where user_id = #{userId,jdbcType=INTEGER}
+	</delete>
+
+
+	<delete id="deleteByTreeId" parameterType="java.lang.Integer">
+		delete from user
+		where tree_id = #{roleId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.User">
+		insert into user (
+		tree_id,creat_time,
+		tel,role_id,
+		password, user_name,history
+		)
+		values
+		(#{treeId,jdbcType=INTEGER},
+		#{creatTime,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR},
+		#{roleId,jdbcType=INTEGER},
+		#{password,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+
+		#{history,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.zeng.zhdj.wy.entity.User">
+		update user
+		set
+		<trim suffixOverrides=",">
+			<if test="treeId != null">
+				tree_id = #{treeId,jdbcType=INTEGER},
+			</if>
+			<if test="tel != null">
+				tel = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+
+			<if test="creatTime != null">
+				creat_time = #{creatTime,jdbcType=VARCHAR},
+			</if>
+			<if test="history != null">
+				history = #{history,jdbcType=INTEGER},
+			</if>
+			<if test="roleId !=null">
+				role_id=#{roleId,jdbcType=INTEGER}
+			</if>
+
+		</trim>
+		where user_id=#{userId,jdbcType=INTEGER}
+	</update>
+	<!-- 通过姓名查找出所选人的信息和所在组织名 -->
+	<select id="SelectByName" resultMap="usertologin" parameterType="String">
+		select
+		tree_id, user_name,user_id
+		from user
+		<where>
+			<if test="_parameter!= null">
+				and user_name like '%${_parameter}%'
+			</if>
+		</where>
+		limit 0,10
+
+	</select>
+	<!-- 设置为历史人员 -->
+	<update id="makeHistory" parameterType="com.zeng.zhdj.wy.entity.User">
+		update user
+		set
+		history =
+		#{history,jdbcType=VARCHAR}
+		where
+		user_id =
+		#{userId,jdbcType=INTEGER}
+	</update>
+
+
+	<!-- 根据手机号码查询 -->
+	<select id="selectByTel" parameterType="java.lang.String"
+		resultMap="PowerGet">
+		select * from user where tel = #{tel,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 删除或增加管理员 -->
+	<update id="Admin" parameterType="com.zeng.zhdj.wy.entity.User">
+		update user
+		set
+
+		user_id =
+		#{userId,jdbcType=INTEGER}
+	</update>
+	<!-- 批量获取权级 -->
+	<select id="selectPowerId" parameterType="Integer[]" resultMap="usertologin">
+		select tree_id from user
+		<where>
+			user_id
+
+			<foreach collection="array" item="userId" open="in(" close=")"
+				separator=",">
+				#{userId}
+			</foreach>
+
+		</where>
+	</select>
+	<!-- 获取统一组织下的useId -->
+	<select id="selectUserId" parameterType="int" resultType="java.lang.Integer">
+		select
+		user_id from user where tree_id = #{treeId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getAdminMsgByTreeId" parameterType="java.lang.Integer"
+		resultMap="usertologin">
+		select
+		user_name,tel,user_id,role_id,tree_id 
+		from user
+		<where>
+
+			tree_id = #{paramEntity.treeId} and role_id=2
+
+
+		</where>
+
+	</select>
+	<select id="getSecretaryMsyByTreeId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		user_name,tel,role_id,tree_id 
+		from user
+		<where>
+
+			tree_id = #{paramEntity.treeId} and role_id=1
+
+
+		</where>
+
+	</select>
+</mapper>

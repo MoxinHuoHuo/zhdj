@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.MeetingFileMapper" >
+  <resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.MeetingFile" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="meeting_id" property="meetingId" jdbcType="INTEGER" />
+    <result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+    <result column="file" property="file" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="sign_img" property="signImg" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="downMap" type="com.zeng.zhdj.wy.entity.MeetingFile" >
+  	<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+  	<result column="file" property="file" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="upload_time" property="uploadtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, meeting_id, meeting_title, file, img ,sign_img, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from meeting_file
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from meeting_file
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByMeetId" parameterType="java.lang.Integer" >
+    delete from meeting_file
+    where meeting_id = #{meetingId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zeng.zhdj.wy.entity.MeetingFile" >
+    insert into meeting_file (id, meeting_id, meeting_title, 
+      file, img)
+    values (#{id,jdbcType=INTEGER}, #{meetingId,jdbcType=INTEGER}, #{meetingTitle,jdbcType=VARCHAR}, 
+      #{file,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zeng.zhdj.wy.entity.MeetingFile" >
+    insert into meeting_file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="meetingId != null" >
+        meeting_id,
+      </if>
+      <if test="meetingTitle != null" >
+        meeting_title,
+      </if>
+      <if test="file != null" >
+        file,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="signImg != null" >
+        sign_img,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="uploadtime != null" >
+        upload_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="meetingId != null" >
+        #{meetingId,jdbcType=INTEGER},
+      </if>
+      <if test="meetingTitle != null" >
+        #{meetingTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+        #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="signImg != null" >
+        #{signImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zeng.zhdj.wy.entity.MeetingFile" >
+    update meeting_file
+    <set >
+      <if test="meetingId != null" >
+        meeting_id = #{meetingId,jdbcType=INTEGER},
+      </if>
+      <if test="meetingTitle != null" >
+        meeting_title = #{meetingTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+        file = #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.MeetingFile" >
+    update meeting_file
+    set meeting_id = #{meetingId,jdbcType=INTEGER},
+      meeting_title = #{meetingTitle,jdbcType=VARCHAR},
+      file = #{file,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据会议Id获取附近图片路径 -->
+  <select id="getFileUrl" parameterType="map" resultMap="downMap">
+  	select file,img,user_name,upload_time
+  	from meeting_file
+  	where meeting_id = #{meetingId} 
+  	
+  </select>
+</mapper>

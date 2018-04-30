@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.PartyBranchMeetingMapper" >
+  <resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="org_admin_id" property="orgAdminId" jdbcType="INTEGER" />
+    <result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+    <result column="meeting_content" property="meetingContent" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="sign_start_time" property="signStartTime" jdbcType="TIMESTAMP" />
+    <result column="sign_end_time" property="signEndTime" jdbcType="TIMESTAMP" />
+    <result column="sign_code" property="signCode" jdbcType="VARCHAR" />
+    <result column="arrive_number" property="arriveNumber" jdbcType="INTEGER" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="document" property="document" jdbcType="VARCHAR" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result  column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="signMap" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="sign_start_time" property="signStartTime" jdbcType="TIMESTAMP" />
+    <result column="sign_end_time" property="signEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="meetingBashMessage" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+  	<result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="sign_start_time" property="signStartTime" jdbcType="TIMESTAMP" />
+    <result column="sign_end_time" property="signEndTime" jdbcType="TIMESTAMP" />
+    <result column="arrive_number" property="arriveNumber" jdbcType="INTEGER" />
+    <result column="meeting_content" property="meetingContent" jdbcType="VARCHAR" />
+    <result column="sign_code" property="signCode" jdbcType="VARCHAR" />
+    <result column="dt_location" property="dtLocation" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="meetingCommentMessage" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="countOrgMeetingMessage" type="com.zeng.zhdj.wy.entity.vo.MeetingCountVo">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+  	<result column="arrive_number" property="arriveNumber" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="meetingPeopleMap" type="com.zeng.zhdj.wy.entity.MeetingSignRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="meeting_id" property="meetingId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sign_people" property="signPeople" jdbcType="VARCHAR" />
+    <result column="sign_people_phone" property="signPeoplePhone" jdbcType="VARCHAR" />
+    <result column="sign_start_time" property="signStartTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="personalMeetingMessage" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting">
+  	<result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="PersonalMeetingVoMap" type="com.zeng.zhdj.wy.entity.vo.PersonalMeetingVo">
+  	<result column="meeting_id" property="meetingId" jdbcType="INTEGER" />
+  	<result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+  	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+  	<result column="status" property="status" jdbcType="INTEGER" />
+  	<result column="sign_people" property="signPeople" jdbcType="VARCHAR" />
+    <result column="sign_people_phone" property="signPeoplePhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="signLocationMessage" type="com.zeng.zhdj.wy.entity.PartyBranchMeeting">
+  	<result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, meeting_title, meeting_content, start_time, end_time, sign_start_time, sign_end_time, 
+    sign_code, arrive_number, image, document, org_id, org_admin_id
+  </sql>
+  <sql id="Base_Meeting_List">
+  	id,org_name,meeting_title,start_time,end_time,sign_start_time,sign_end_time,arrive_number,meeting_content,sign_code,dt_location
+  </sql>
+  <sql id="meeting_comment_list">
+  	id,meeting_title,start_time,end_time,arrive_number
+  </sql>
+  <sql id="sign_people_List" >
+    id, meeting_id, sign_people, sign_people_phone, sign_start_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from party_branch_meeting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from party_branch_meeting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zeng.zhdj.wy.entity.PartyBranchMeeting" >
+    insert into party_branch_meeting (id, meeting_title, meeting_content, 
+      start_time, end_time, sign_start_time, 
+      sign_end_time, sign_code, arrive_number, 
+      image, document)
+    values (#{id,jdbcType=INTEGER}, #{meetingTitle,jdbcType=VARCHAR}, #{meetingContent,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{signStartTime,jdbcType=TIMESTAMP}, 
+      #{signEndTime,jdbcType=TIMESTAMP}, #{signCode,jdbcType=VARCHAR}, #{arriveNumber,jdbcType=INTEGER}, 
+      #{image,jdbcType=VARCHAR}, #{document,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zeng.zhdj.wy.entity.PartyBranchMeeting" >
+    insert into party_branch_meeting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      
+      <if test="meetingTitle != null" >
+        meeting_title,
+      </if>
+      <if test="meetingContent != null" >
+        meeting_content,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="signStartTime != null" >
+        sign_start_time,
+      </if>
+      <if test="signEndTime != null" >
+        sign_end_time,
+      </if>
+      <if test="signCode != null" >
+        sign_code,
+      </if>
+      <if test="arriveNumber != null" >
+        arrive_number,
+      </if>
+      
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="dtLocation != null" >
+        dt_location,
+        
+      </if>
+      <if test="type != null" >
+        type,
+        
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      
+      <if test="meetingTitle != null" >
+        #{meetingTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="meetingContent != null" >
+        #{meetingContent,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signStartTime != null" >
+        #{signStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signEndTime != null" >
+        #{signEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signCode != null" >
+        #{signCode,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveNumber != null" >
+        #{arriveNumber,jdbcType=INTEGER},
+      </if>
+     
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng},
+      </if>
+      <if test="lat != null" >
+        #{lat},
+      </if>
+      <if test="dtLocation != null" >
+        #{dtLocation},
+      </if>
+       <if test="type != null" >
+        #{type},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zeng.zhdj.wy.entity.PartyBranchMeeting" >
+    update party_branch_meeting
+    <set >
+      <if test="meetingTitle != null" >
+        meeting_title = #{meetingTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="meetingContent != null" >
+        meeting_content = #{meetingContent,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signStartTime != null" >
+        sign_start_time = #{signStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signEndTime != null" >
+        sign_end_time = #{signEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signCode != null" >
+        sign_code = #{signCode,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveNumber != null" >
+        arrive_number = #{arriveNumber,jdbcType=INTEGER},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="document != null" >
+        document = #{document,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.PartyBranchMeeting" >
+    update party_branch_meeting
+    set meeting_title = #{meetingTitle,jdbcType=VARCHAR},
+      meeting_content = #{meetingContent,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      sign_start_time = #{signStartTime,jdbcType=TIMESTAMP},
+      sign_end_time = #{signEndTime,jdbcType=TIMESTAMP},
+      sign_code = #{signCode,jdbcType=VARCHAR},
+      arrive_number = #{arriveNumber,jdbcType=INTEGER},
+      image = #{image,jdbcType=VARCHAR},
+      document = #{document,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据会议id查询会议记录 -->
+  <select id="getMeetingRecordByMeetingId" parameterType="int" resultMap="signMap">
+  	select id,start_time, end_time, sign_start_time, sign_end_time
+  	from party_branch_meeting
+  	where id = #{meetingId}
+  </select>
+  <!-- 后台获取会议 -->
+  <select id="backStageGetMeeting" parameterType="map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from party_branch_meeting
+    where org_id = #{orgId} order by end_time desc
+    limit #{start},#{pagesize} 
+  </select>
+  <!-- 根据类型id获取会议 -->
+  <select id="getMeetingByType" parameterType="map" resultMap="meetingBashMessage">
+  	select 
+  	<include refid="Base_Meeting_List" />
+  	from party_branch_meeting
+  	where org_id = #{orgId} and type = #{type}
+  	limit #{start},#{pagesize} 
+  </select>
+  <!-- 根据手机号和类型号获取会议id -->
+  <select id="getMeetingIdByPhone" parameterType="map" resultType="int">
+  	select meeting_id
+  	from meeting_people
+  	where arrive_people_phone = #{arrivePeoplePhone} and type = #{type} order by start_time desc
+  	limit #{start},10
+  </select>
+  <!-- 根据id获取会议 -->
+  <select id="getMeetingById" parameterType="int" resultMap="meetingBashMessage">
+  	select
+  	<include refid="Base_Meeting_List" />
+  	from party_branch_meeting 
+  	where id = #{id} order by sign_start_time desc
+  </select>
+  <!-- 通过uuid获取会议 -->
+  <select id="getMeetingByuuid" parameterType="String" resultMap="meetingBashMessage">
+  	select
+  	<include refid="Base_Meeting_List" />
+  	from party_branch_meeting
+  	where uuid = #{uuid}
+  </select>
+  <!-- 获取二维码路径 -->
+  <select id="getSignCode" parameterType="map" resultType="String">
+  	select sign_code
+  	from party_branch_meeting
+  	where id = #{id} 
+  </select>
+  <!-- 获取uuid -->
+  <select id="getuuid" parameterType="int" resultType="String">
+  	select uuid
+  	from party_branch_meeting
+  	where id = #{id}
+  </select>
+  <!-- 根据组织id查询组织名称 -->
+  <select id="getOrgNameByOrgId" parameterType="int" resultType="String">
+  	select cname
+  	from tree
+  	where cid = #{warnOrgId}
+  </select>
+  <!-- 查询已结束会议 -->
+  <select id="getEndMeeting" parameterType="map" resultMap="meetingCommentMessage">
+  	select 
+  	<include refid="meeting_comment_list" />
+  	from party_branch_meeting
+  	where NOW() >= end_time and org_id = #{orgId}
+  	limit #{start},#{pagesize}
+  </select>
+  <!-- 获取会议数量 -->
+  <select id="getMeetingCount" parameterType="int" resultType="int">
+  	select count(*)
+  	from party_branch_meeting
+  	where org_id = #{orgId}
+  </select>
+  <!-- 用户获取会议总数 -->
+  <select id="UsergetMeetingCount" parameterType="int" resultType="int">
+  	select count(*)
+  	from meeting_people
+  	where arrive_people_phone = #{arrivePeoplePhone}
+  </select>
+  <!-- 根据会议id查询组织id -->
+  <select id="getOrgIdByid" parameterType="int" resultType="int">
+  	select org_id
+  	from party_branch_meeting
+  	where id = #{id}
+  </select>
+  <!-- 查询某用户是否为管理员 -->
+  <select id="checkAdmin" parameterType="map" resultType="int">
+  	select role_id
+  	from user
+  	where user_id = #{orgAdminId}
+   </select>
+   <!-- 管理员获取会议 -->
+   <select id="AdminGetMeeting" parameterType="map" resultMap="BaseResultMap">
+   	select
+  	<include refid="Base_Meeting_List" />
+  	from party_branch_meeting
+  	where org_id = #{orgId}
+   </select>
+  
+  <select id="GetOrgMeetings" parameterType="map" resultMap="BaseResultMap">
+   	select 
+   	*
+   	from party_branch_meeting
+   	where DATE_FORMAT(start_time,'%Y') = #{time1}  and org_id = #{orgId}
+   </select>
+   <!-- 统计组织会议 DATE_FORMAT(start_time,'%Y-%m') -->
+   <select id="countOrgMeetings" parameterType="map" resultMap="countOrgMeetingMessage">
+   	select 
+   	<include refid="meeting_comment_list" />
+   	from party_branch_meeting
+   	where DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2} and type = #{type} and org_id = #{orgId}
+   </select>
+   <!-- 统计组织某时间段所有类型会议数量 -->
+   <select id="getOrgMeetingCount" parameterType="map" resultType="int">
+   	select count(*)
+   	from party_branch_meeting
+   	where DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2} and type = #{type} and org_id = #{orgId}
+   </select>
+   <!-- 根据会议id获取已参会人员情况 -->
+   <select id="getSignedPeopleByMeetingId" parameterType="int" resultMap="meetingPeopleMap">
+   	select
+   	<include refid="sign_people_List" />
+   	from meeting_sign
+   	where meeting_id = #{meetingId} and status = 1 or status = 2 
+   </select>
+   <!-- 根据会议id获取未参会人员情况 -->
+   <select id="getUnSignedPeopleByMeetingId" parameterType="int" resultMap="meetingPeopleMap">
+   	select
+   	<include refid="sign_people_List" />
+   	from meeting_sign
+   	where meeting_id = #{meetingId} and status = 0 
+   </select>
+   <!-- 根据会议类型获取个人已参加会议 -->
+   <select id="getPersonalSignedMeeting" parameterType="map" resultMap="PersonalMeetingVoMap">
+   	select
+   	meeting_id,sign_people,sign_people_phone,status
+   	from meeting_sign
+  	where org_id = #{orgId} and sign_people_phone = #{signPeoplePhone} and type = #{type} and DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2}
+  	and status != 0  
+  	 <!-- where org_id = #{orgId} and sign_people_phone = #{signPeoplePhone} and status = 0 and type = #{type} and DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2} -->
+   </select>
+   <!-- 获取个人未参加会议 -->
+   <select id="getPersonalUnSignedMeeting" parameterType="map" resultMap="PersonalMeetingVoMap">
+   	select
+   	meeting_id,sign_people,sign_people_phone,status
+   	from meeting_sign
+   	where org_id = #{orgId} and sign_people_phone = #{signPeoplePhone} and status = 0 and type = #{type} and DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2}
+   </select>
+   <!-- 个人根据id获取会议 -->
+  <select id="getMeetingByIdPersonally" parameterType="int" resultMap="personalMeetingMessage">
+  	select
+  	meeting_title,start_time
+  	from party_branch_meeting 
+  	where id = #{id} 
+  </select>
+ 
+  <!-- 根据组织id获取会议 -->
+  <select id="GetOrgMeetingsByOrgId" parameterType="map" resultMap="BaseResultMap">
+  	select *
+  	from party_branch_meeting
+  	where 
+  	org_id = #{orgId}   and DATE_FORMAT(start_time,'%Y') = #{time1} 
+  </select>
+  <!-- 根据会议类型获取个人已参加会议数量 -->
+  <select id="getPersonalSignedMeetingCount" parameterType="map" resultType="int">
+  	select count(*)
+  	from meeting_sign
+  	where 
+  	org_id = #{orgId} and sign_people_phone = #{signPeoplePhone} and status != 0 and type = #{type} and DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2}
+  </select>
+  <!-- 根据会议类型获取个人未参加会议数量 -->
+  <select id="getPersonalUnSignedMeetingCount" parameterType="map" resultType="int">
+  	select count(*)
+  	from meeting_sign
+  	where 
+  	org_id = #{orgId} and sign_people_phone = #{signPeoplePhone} and status = 0 and type = #{type} and DATE_FORMAT(start_time,'%Y-%m') between #{time1} and #{time2}
+  </select>
+  <!-- 根据会议id获取开会地点经纬度信息 -->
+  <select id="getMeetingLocation" parameterType="int" resultMap="signLocationMessage">
+  	select lng,lat
+  	from party_branch_meeting
+  	where id = #{meetingId}
+  </select>
+  <!-- 获取个人会议数量 -->
+  <select id="getPersonalCount" parameterType="map" resultType="int">
+  	select count(*)
+  	from meeting_people
+  	where arrive_people_phone = #{arrivePeoplePhone} and type = #{type}
+  </select>
+  <!-- 获取会议文件 -->
+  
+  <select id="selectByFile" parameterType="int" resultType="com.zeng.zhdj.wy.entity.MeetingFile">
+  	select *
+  	from meeting_file
+  	where meeting_id = #{meetId} 
+  </select>
+</mapper>

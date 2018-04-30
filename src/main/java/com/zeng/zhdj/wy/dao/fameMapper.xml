@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.fameMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.fame">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="treeId" property="treeid" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, user_name, treeId, role_name
+	</sql>
+
+	<select id="selectByTreeId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from fame
+		where treeId = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from fame
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.fame">
+		insert into fame (id, user_name, treeId,
+		role_name)
+		values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR},
+		#{treeid,jdbcType=INTEGER},
+		#{roleName,jdbcType=VARCHAR})
+	</insert>
+
+
+
+	<update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.fame">
+		update fame
+		set user_name = #{userName,jdbcType=VARCHAR},
+		treeId = #{treeid,jdbcType=INTEGER},
+		role_name = #{roleName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

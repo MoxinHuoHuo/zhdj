@@ -1,0 +1,240 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.SubmitMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.Submit">
+		<id column="submit_id" property="submitId" jdbcType="INTEGER" />
+		<result column="submit_user_id" property="submitUserId"
+			jdbcType="INTEGER" />
+		<result column="submit_time" property="submitTime" jdbcType="VARCHAR" />
+		<result column="do_start_time" property="doStartTime" jdbcType="VARCHAR" />
+		<result column="do_finish_time" property="doFinishTime"
+			jdbcType="VARCHAR" />
+		<result column="submit_content" property="submitContent"
+			jdbcType="VARCHAR" />
+
+		<result column="submit_name" property="submitName" jdbcType="VARCHAR" />
+		<result column="read_ok" property="readOk" jdbcType="INTEGER" />
+		<result column="submit_tree_id" property="submitTreeId"
+			jdbcType="INTEGER" />
+		<result column="check_opinion" property="checkOpinion"
+			jdbcType="VARCHAR" />
+		<result column="check_name" property="checkName" jdbcType="VARCHAR" />
+		<result column="tast_id" property="tastId" jdbcType="VARCHAR" />
+		<result column="submit_type" property="submitType" jdbcType="INTEGER" />
+		<result column="submit_parent_tree_id" property="submitParentTreeId"
+			jdbcType="INTEGER" />
+		<result column="receive_user_id" property="receiveUserId"
+			jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="finishResult" type="com.zeng.zhdj.wy.entity.Submit"
+		extends="BaseResultMap">
+		<association property="finishCodition"
+			javaType="com.zeng.zhdj.wy.entity.FinishCodition" column="submit_id"
+			select="com.zeng.zhdj.wy.dao.FinishCoditionMapper.selectBysubmitId"></association>
+	</resultMap>
+
+
+	<resultMap id="tastResult" type="com.zeng.zhdj.wy.entity.Submit"
+		extends="BaseResultMap">
+		<association property="tast" javaType="com.zeng.zhdj.wy.entity.Tast"
+			column="tast_id" select="com.zeng.zhdj.wy.dao.TastMapper.selectByPrimaryKey"></association>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		submit_id, submit_user_id, submit_time, do_start_time,
+		do_finish_time,
+		submit_content,submit_type,
+		tast_id,read_ok,check_opinion,
+		submit_name,submit_tree_id,submit_parent_tree_id,receive_user_id
+
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from submit
+		where submit_id = #{submitId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByTastId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from submit
+		where tast_id = #{tastId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from submit
+		where submit_id = #{submitId,jdbcType=INTEGER}
+	</delete>
+
+<delete id="deleteByTastId" parameterType="java.lang.Integer">
+		delete from submit
+		where tast_id = #{tastId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.Submit">
+		insert into submit (submit_id,
+		submit_user_id, submit_time,
+		do_start_time, do_finish_time,
+		submit_content,tast_id,
+
+		submit_name,submit_tree_id,submit_parent_tree_id,submit_type,receive_user_id
+		)
+		values
+		(#{submitId,jdbcType=INTEGER},
+		#{submitUserId,jdbcType=INTEGER},
+
+		#{submitTime,jdbcType=VARCHAR},
+		#{doStartTime,jdbcType=VARCHAR},
+		#{doFinishTime,jdbcType=VARCHAR},
+		#{submitContent,jdbcType=VARCHAR},
+		#{tastId,jdbcType=INTEGER},
+
+		#{submitName,jdbcType=VARCHAR},
+		#{submitTreeId,jdbcType=INTEGER},
+		#{submitParentTreeId,jdbcType=INTEGER},
+		#{submitType,jdbcType=INTEGER},
+		#{receiveUserId,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.zeng.zhdj.wy.entity.Submit">
+		update submit
+		<set>
+			<if test="submitUserId != null">
+				submit_user_id = #{submitUserId,jdbcType=INTEGER},
+			</if>
+			<if test="submitTime != null">
+				submit_time = #{submitTime,jdbcType=VARCHAR},
+			</if>
+			<if test="doStartTime != null">
+				do_start_time = #{doStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="doFinishTime != null">
+				do_finish_time = #{doFinishTime,jdbcType=VARCHAR},
+			</if>
+			<if test="submitContent != null">
+				submit_content = #{submitContent,jdbcType=VARCHAR},
+			</if>
+
+			<if test="submitName != null">
+				submit_name = #{submitName,jdbcType=VARCHAR},
+			</if>
+			<if test="readOk != null">
+				read_ok = #{readOk,jdbcType=INTEGER},
+			</if>
+			<if test="submitTreeId != null">
+				submit_tree_id = #{submitTreeId,jdbcType=INTEGER},
+			</if>
+			<if test="checkOpinion != null">
+				check_opinion = #{checkOpinion,jdbcType=VARCHAR},
+			</if>
+			<if test="checkName != null">
+				check_name = #{checkName,jdbcType=VARCHAR},
+			</if>
+			<if test="tastId != null">
+				tast_id = #{tastId,jdbcType=VARCHAR},
+			</if>
+			<if test="submitType != null">
+				submit_type = #{submitType,jdbcType=INTEGER},
+			</if>
+			<if test="submitParentTreeId != null">
+				submit_parent_tree_id =
+				#{submitParentTreeId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where submit_id =
+		#{submitId,jdbcType=INTEGER}
+	</update>
+	<!-- 通过条件查询，并且按时间排序 -->
+	<select id="selectPageListUseDyc" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="tastResult">
+		select
+		<include refid="Base_Column_List" />
+		from submit
+		<where>
+			<if test="paramEntity.submitUserId!=null">and submit_user_id = #{paramEntity.submitUserId}</if>
+			<if test="paramEntity.submitParentTreeId!=null">
+				and submit_parent_tree_id =
+				#{paramEntity.submitParentTreeId}
+			</if>
+			<if test="paramEntity.submitTreeId!=null">and submit_tree_id = #{paramEntity.submitTreeId}
+			</if>
+		</where>
+		limit #{start},#{rows}
+	</select>
+
+	<!-- 通过条件查询，返回完成情况结果集 -->
+	<select id="selectPageFinish" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="finishResult">
+		select
+		<include refid="Base_Column_List" />
+		from submit
+		<where>
+			<if test="paramEntity.submitUserId!=null">and submit_user_id = #{paramEntity.submitUserId}</if>
+			<if test="paramEntity.submitParentTreeId!=null">
+				and submit_parent_tree_id =
+				#{paramEntity.submitParentTreeId}
+			</if>
+			<if test="paramEntity.submitTreeId!=null">and submit_tree_id = #{paramEntity.submitTreeId}
+			</if>
+		</where>
+		limit #{start},#{rows}
+	</select>
+
+	<!-- 计算任务 -->
+	<select id="selectPageCount" resultType="java.lang.Integer"
+		parameterType="com.zeng.zhdj.unity.Page">
+		select
+		count(*)
+		from submit
+		<where>
+			<if test="paramEntity.submitUserId!=null">and submit_user_id = #{paramEntity.submitUserId}</if>
+			<if test="paramEntity.submitParentTreeId!=null">
+				and submit_parent_tree_id =
+				#{paramEntity.submitParentTreeId}
+			</if>
+			<if test="paramEntity.submitTreeId!=null">and submit_tree_id = #{paramEntity.submitTreeId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 计算改任务对应的计划是否只被提交了一次 -->
+	<select id="CountOnlySubmit" resultType="java.lang.Integer"
+		parameterType="com.zeng.zhdj.wy.entity.Submit">
+		select
+		count(*)
+		from submit
+		<where>
+			<if test="submitUserId!=null">and submit_user_id = #{submitUserId}</if>
+			<if test="tastId!=null">and tast_id = #{tastId}</if>
+		</where>
+	</select>
+	<select id="selectSelfFinsh" resultMap="finishResult"
+		parameterType="com.zeng.zhdj.wy.entity.vo.PageVo">
+		select
+		<include refid="Base_Column_List" />
+		from submit
+		where submit_type = 1 and receive_user_id =
+		#{userId,jdbcType=INTEGER}
+		limit
+		#{page},#{rows}
+	</select>
+
+	<select id="judge" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		select
+		IF(AVG(read_ok)is null,3,AVG(read_ok))
+		from submit
+		where
+		tast_id=#{tastId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="judgeifNull" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		*
+		from submit
+		where
+		tast_id=#{tastId,jdbcType=INTEGER}
+	</select>
+</mapper>

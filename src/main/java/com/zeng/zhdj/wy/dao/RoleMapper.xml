@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.RoleMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.Role">
+		<id column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.zeng.zhdj.wy.entity.Role"
+		extends="BaseResultMap">
+		<result column="role_power" property="rolePower" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		role_id, role_name
+	</sql>
+	<sql id="Blob_Column_List">
+		role_power
+	</sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from role
+		where role_id = #{roleId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from role
+		where role_id = #{roleId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.Role">
+		insert into role (role_id, role_name, role_power
+		)
+		values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR},
+		#{rolePower,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.Role">
+		update role
+		set role_name = #{roleName,jdbcType=VARCHAR}
+		where role_id = #{roleId,jdbcType=INTEGER}
+	</update>
+</mapper>

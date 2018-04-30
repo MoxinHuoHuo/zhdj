@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.TreeMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.TreeNode">
+		<result column="cid" property="id" jdbcType="INTEGER" />
+		<result column="cname" property="text" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="INTEGER" />
+		<result column="power_id" property="powerId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 含权级的返回 -->
+	<resultMap id="PowerResultMap" type="com.zeng.zhdj.wy.entity.TreeNode">
+		<result column="cid" property="id" jdbcType="INTEGER" />
+		<result column="cname" property="text" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="INTEGER" />
+		<result column="power_id" property="powerId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 通过cid查询相应节点 -->
+	<select id="getNodeById" parameterType="int" resultMap="BaseResultMap">
+		select
+		cid,cname,pid,power_id
+		from tree
+		where cid = #{id}
+	</select>
+	<!-- 通过pid查询某节点下的子节点 -->
+	<select id="getChildrenByPid" parameterType="int" resultMap="BaseResultMap">
+		select cid,cname,pid
+		from tree
+		where pid = #{pid}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from tree
+		where cid = #{id,jdbcType=INTEGER}
+	</delete>
+	<update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.TreeNode">
+		update tree
+		set
+		cname = #{text,jdbcType=VARCHAR}
+		
+		where
+		cid =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.TreeNode">
+		insert into tree ( cname,
+		pid,power_id
+		)
+		values (#{text,jdbcType=VARCHAR},
+		#{pid,jdbcType=INTEGER},#{powerId,jdbcType=INTEGER}
+		)
+	</insert>
+	<!-- 通过cid查询相应节点,并返回power -->
+	<select id="getNodeAndPowerIdById" parameterType="int"
+		resultMap="PowerResultMap">
+		select
+		cid,cname,pid,power_id
+		from tree
+		where cid = #{id}
+	</select>
+	<!-- 根據名字查询出树节点 -->
+
+	<select id="FindByName" resultMap="PowerResultMap"
+		parameterType="java.lang.String">
+		select
+		cid,cname,power_id
+		from tree
+		<where>
+			<if test="_parameter!= null">
+				and cname like CONCAT('%', #{TreeName}, '%')
+			</if>
+		</where>
+		limit 0,10
+	</select>
+	<!-- 通过cid查询相应节点,并返回powerid -->
+	<select id="getNodeByPid" parameterType="int" resultType="int">
+		select
+		power_id
+		from tree
+		where cid = #{pid}
+	</select>
+	<!-- 批量获取权级 -->
+	<select id="selectPowerId" parameterType="Integer[]" resultType="Integer">
+		select power_id from tree
+		<where>
+			cid
+			<foreach collection="array" item="treeId" open="in(" close=")"
+				separator=",">
+				#{treeId}
+			</foreach>
+		</where>
+	</select>
+
+</mapper>

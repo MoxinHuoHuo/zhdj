@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.NewsMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.News">
+		<id column="new_id" property="newId" jdbcType="INTEGER" />
+		<result column="new_href" property="newHref" jdbcType="VARCHAR" />
+		<result column="news_date" property="newsDate" jdbcType="VARCHAR" />
+		<result column="imgs" property="imgs" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		new_id,  new_href, news_date, imgs
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from news
+		where new_id = #{newId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from news
+		where new_id = #{newId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.News">
+		insert into news (new_id,
+		 new_href,
+		news_date, imgs)
+		values (#{newId,jdbcType=INTEGER},
+		
+		#{newHref,jdbcType=VARCHAR},
+		#{newsDate,jdbcType=VARCHAR}, #{imgs,jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="update" parameterType="com.zeng.zhdj.wy.entity.News">
+		update news
+		set
+		
+		new_href =
+		#{newHref,jdbcType=VARCHAR},
+		news_date = #{newsDate,jdbcType=VARCHAR},
+		imgs = #{imgs,jdbcType=VARCHAR}
+		where new_id =
+		#{newId,jdbcType=INTEGER}
+	</update>
+	<!-- 通过条件查询，并且按时间排序 -->
+	<select id="selectPageListUseDyc" parameterType="com.zeng.zhdj.unity.Page"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from news
+		limit #{start},#{rows}
+	</select>
+
+	<select id="selectPageCount" resultType="java.lang.Integer"
+		parameterType="com.zeng.zhdj.unity.Page">
+		select
+		count(*)
+		from news
+
+
+	</select>
+</mapper>

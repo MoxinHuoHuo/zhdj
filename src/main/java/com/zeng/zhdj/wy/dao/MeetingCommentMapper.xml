@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.MeetingCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.MeetingComment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="meeting_id" property="meetingId" jdbcType="INTEGER" />
+    <result column="meeting_title" property="meetingTitle" jdbcType="VARCHAR" />
+    <result column="commentator" property="commentator" jdbcType="VARCHAR" />
+    <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
+    <result column="comment_time" property="commentTime" jdbcType="TIMESTAMP" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, meeting_id, meeting_title, commentator, comment_content, comment_time,org_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from meeting_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from meeting_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+ 
+   <delete id="deleteByMeetingId" parameterType="java.lang.Integer" >
+    delete from meeting_comment
+    where meeting_id = #{meetId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zeng.zhdj.wy.entity.MeetingComment" >
+    insert into meeting_comment (id, meeting_id, commentator, 
+      comment_content, comment_time)
+    values (#{id,jdbcType=INTEGER}, #{meetingId,jdbcType=INTEGER}, #{commentator,jdbcType=VARCHAR}, 
+      #{commentContent,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zeng.zhdj.wy.entity.MeetingComment" >
+    insert into meeting_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="meetingId != null" >
+        meeting_id,
+      </if>
+      <if test="meetingTitle != null">
+      	meeting_title,
+      </if>
+      <if test="commentator != null" >
+        commentator,
+      </if>
+      <if test="commentContent != null" >
+        comment_content,
+      </if>
+      <if test="commentTime != null" >
+        comment_time,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="meetingId != null" >
+        #{meetingId,jdbcType=INTEGER},
+      </if>
+      <if test="meetingTitle != null">
+      	#{meetingTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="commentator != null" >
+        #{commentator,jdbcType=VARCHAR},
+      </if>
+      <if test="commentContent != null" >
+        #{commentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="commentTime != null" >
+        #{commentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zeng.zhdj.wy.entity.MeetingComment" >
+    update meeting_comment
+    <set >
+      <if test="meetingId != null" >
+        meeting_id = #{meetingId,jdbcType=INTEGER},
+      </if>
+      <if test="commentator != null" >
+        commentator = #{commentator,jdbcType=VARCHAR},
+      </if>
+      <if test="commentContent != null" >
+        comment_content = #{commentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="commentTime != null" >
+        comment_time = #{commentTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.MeetingComment" >
+    update meeting_comment
+    set meeting_id = #{meetingId,jdbcType=INTEGER},
+      commentator = #{commentator,jdbcType=VARCHAR},
+      comment_content = #{commentContent,jdbcType=VARCHAR},
+      comment_time = #{commentTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据大会id查询评论 -->
+  <select id="getCommentById" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from meeting_comment
+  	where meeting_id = #{meetingId} order by comment_time desc
+  	limit #{start},10
+  </select>
+  <!-- 根据大会id获取评论总数 -->
+  <select id="getCommentCountById" parameterType="map" resultType="int">
+  	select count(*)
+  	from meeting_comment
+  	where meeting_id = #{meetingId} order by comment_time desc
+  </select>
+  <!-- 根据组织id获取评论 -->
+  <select id="getCommentByOrgId" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from meeting_comment
+  	where org_id = #{orgId}  and meeting_title like #{meetingTitle} order by comment_time desc 
+  	limit #{start},#{pagesize}
+  </select>
+  <!-- 获取评论数量 -->
+  <select id="getCommentCount" parameterType="map" resultType="int">
+  	select count(*)
+  	from meeting_comment
+  	where org_id = #{orgId} and meeting_title like #{meetingTitle} 
+  </select>
+</mapper>

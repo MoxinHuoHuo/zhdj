@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.CountUseMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.CountUse">
+		<id column="count_id" property="countId" jdbcType="INTEGER" />
+		<result column="tast_type" property="tastType" jdbcType="INTEGER" />
+		<result column="receive_Unit" property="receiveUnit" jdbcType="INTEGER" />
+		<result column="receive_id" property="receiveId" jdbcType="INTEGER" />
+		<result column="finish_ok" property="finishOk" jdbcType="INTEGER" />
+		<result column="finish_codition" property="finishCodition"
+			jdbcType="VARCHAR" />
+		<result column="tast_title" property="tastTitle" jdbcType="VARCHAR" />
+		<result column="tast_id" property="tastId" jdbcType="INTEGER" />
+		<result column="finish_time" property="finishTime" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" jdbcType="VARCHAR" />
+		<result column="receiver_name" property="receiverName"
+			jdbcType="VARCHAR" />
+		<result column="tree_name" property="treeName" jdbcType="VARCHAR" />
+		<result column="sent_id" property="sentId" jdbcType="INTEGER" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+		<result column="only_type" property="onlyType" jdbcType="VARCHAR" />
+		<result column="count_start_month" property="countStartMonth"
+			jdbcType="INTEGER" />
+		<result column="count_end_month" property="countEndMonth"
+			jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="LONGVARCHAR" />
+		<result column="really_finish_time" property="reallyFinishTime"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		count_id, tast_type, receive_Unit, receive_id, finish_ok,
+		finish_codition,
+		tast_title,
+		tast_id, finish_time, start_time,
+		receiver_name, tree_name, sent_id, uuid,
+		only_type,
+		count_start_month,
+		count_end_month,url,really_finish_time
+	</sql>
+	<sql id="Blob_Column_List">
+		url
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from count_use
+		where count_id = #{countId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		count_use
+		where count_id = #{countId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		insert into count_use
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="countId != null">
+				count_id,
+			</if>
+			<if test="tastType != null">
+				tast_type,
+			</if>
+			<if test="receiveUnit != null">
+				receive_Unit,
+			</if>
+			<if test="receiveId != null">
+				receive_id,
+			</if>
+			<if test="finishOk != null">
+				finish_ok,
+			</if>
+			<if test="finishCodition != null">
+				finish_codition,
+			</if>
+			<if test="tastTitle != null">
+				tast_title,
+			</if>
+			<if test="tastId != null">
+				tast_id,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="receiverName != null">
+				receiver_name,
+			</if>
+			<if test="UUID != null">
+				uuid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="countId != null">
+				#{countId,jdbcType=INTEGER},
+			</if>
+			<if test="tastType != null">
+				#{tastType,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUnit != null">
+				#{receiveUnit,jdbcType=INTEGER},
+			</if>
+			<if test="receiveId != null">
+				#{receiveId,jdbcType=INTEGER},
+			</if>
+			<if test="finishOk != null">
+				#{finishOk,jdbcType=INTEGER},
+			</if>
+			<if test="finishCodition != null">
+				#{finishCodition,jdbcType=VARCHAR},
+			</if>
+			<if test="tastTitle != null">
+				#{tastTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="tastId != null">
+				#{tastId,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="receiverName != null">
+				#{receiverName,jdbcType=VARCHAR},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 置空完成情况部分 -->
+	<update id="deleteFinish" parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		update count_use
+		<set>
+			finish_codition = #{finishCodition,jdbcType=VARCHAR}, finish_ok =
+			#{finishOk,jdbcType=INTEGER}, url = #{url,jdbcType=LONGVARCHAR},
+			really_finish_time = #{reallyFinishTime
+			,jdbcType=VARCHAR},
+		</set>
+	</update>
+	<update id="updateByUUID" parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		update count_use
+		<set>
+			<if test="tastType != null">
+				tast_type = #{tastType,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUnit != null">
+				receive_Unit = #{receiveUnit,jdbcType=INTEGER},
+			</if>
+			<if test="receiveId != null">
+				receive_id = #{receiveId,jdbcType=INTEGER},
+			</if>
+			<if test="finishOk != null">
+				finish_ok = #{finishOk,jdbcType=INTEGER},
+			</if>
+			<if test="finishCodition != null">
+				finish_codition = #{finishCodition,jdbcType=VARCHAR},
+			</if>
+			<if test="tastTitle != null">
+				tast_title = #{tastTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="tastId != null">
+				tast_id = #{tastId,jdbcType=INTEGER},
+			</if>
+			<if test="receiverName != null">
+				receiver_name= #{receiverName,jdbcType=VARCHAR},
+			</if>
+
+			<if test="url != null">
+				url = #{url,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="countStartMonth != null">
+				count_start_month = #{countStartMonth,jdbcType=INTEGER},
+			</if>
+			<if test="countEndMonth != null">
+				count_end_month = #{countEndMonth ,jdbcType=INTEGER},
+			</if>
+			<if test="reallyFinishTime != null">
+				really_finish_time = #{reallyFinishTime
+				,jdbcType=VARCHAR},
+			</if>
+
+		</set>
+		where uuid = #{UUID,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateByUserId" parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		update count_use
+		<set>
+			<if test="tastType != null">
+				tast_type = #{tastType,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUnit != null">
+				receive_Unit = #{receiveUnit,jdbcType=INTEGER},
+			</if>
+			<if test="receiveId != null">
+				receive_id = #{receiveId,jdbcType=INTEGER},
+			</if>
+			<if test="finishOk != null">
+				finish_ok = #{finishOk,jdbcType=INTEGER},
+			</if>
+			<if test="finishCodition != null">
+				finish_codition = #{finishCodition,jdbcType=VARCHAR},
+			</if>
+			<if test="tastTitle != null">
+				tast_title = #{tastTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="tastId != null">
+				tast_id = #{tastId,jdbcType=INTEGER},
+			</if>
+			<if test="finishTime != null">
+				finish_time = #{finishTime,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="receiverName != null">
+				receiver_name = #{receiverName,jdbcType=VARCHAR},
+			</if>
+			<if test="treeName != null">
+				tree_name = #{treeName,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=LONGVARCHAR},
+			</if>
+
+		</set>
+		where receive_id = #{receiveId,jdbcType=INTEGER}
+	</update>
+	<!-- 批量 -->
+	<insert id="intsertByList" parameterType="java.util.List">
+
+		<foreach collection="list" item="item" index="index">
+			insert into count_use
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="item.countId != null">
+					count_id,
+				</if>
+				<if test="item.receiverName != null">
+					receiver_name,
+				</if>
+				<if test="item.treeName != null">
+					tree_name,
+				</if>
+
+				<if test="item.tastType != null">
+					tast_type,
+				</if>
+				<if test="item.receiveUnit != null">
+					receive_Unit,
+				</if>
+				<if test="item.receiveId != null">
+					receive_id,
+				</if>
+				<if test="item.finishOk != null">
+					finish_ok,
+				</if>
+				<if test="item.finishCodition != null">
+					finish_codition,
+				</if>
+				<if test="item.tastTitle != null">
+					tast_title,
+				</if>
+				<if test="item.tastId != null">
+					tast_id,
+				</if>
+				<if test="item.url != null">
+					url,
+				</if>
+				<if test="item.finishTime != null">
+					finish_time,
+				</if>
+				<if test="item.startTime != null">
+					start_time,
+				</if>
+				<if test="item.sentId != null">
+					sent_id,
+				</if>
+				<if test="item.UUID != null">
+					uuid,
+				</if>
+				<if test="item.onlyType != null">
+					only_type,
+				</if>
+				<if test="item.countStartMonth != null">
+					count_start_month,
+				</if>
+				<if test="item.countEndMonth != null">
+					count_end_month,
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=");" suffixOverrides=",">
+				<if test="item.countId != null">
+					#{item.countId,jdbcType=INTEGER},
+				</if>
+				<if test="item.receiverName != null">
+					#{item.receiverName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.treeName != null">
+					#{item.treeName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.tastType != null">
+					#{item.tastType,jdbcType=INTEGER},
+				</if>
+				<if test="item.receiveUnit != null">
+					#{item.receiveUnit,jdbcType=INTEGER},
+				</if>
+				<if test="item.receiveId != null">
+					#{item.receiveId,jdbcType=INTEGER},
+				</if>
+				<if test="item.finishOk != null">
+					#{item.finishOk,jdbcType=INTEGER},
+				</if>
+				<if test="item.finishCodition != null">
+					#{item.finishCodition,jdbcType=VARCHAR},
+				</if>
+				<if test="item.tastTitle != null">
+					#{item.tastTitle,jdbcType=VARCHAR},
+				</if>
+				<if test="item.tastId != null">
+					#{item.tastId,jdbcType=INTEGER},
+				</if>
+				<if test="item.url != null">
+					#{item.url,jdbcType=VARCHAR},
+				</if>
+				<if test="item.finishTime != null">
+					#{item.finishTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.startTime != null">
+					#{item.startTime,jdbcType=INTEGER},
+				</if>
+				<if test="item.sentId != null">
+					#{item.sentId,jdbcType=INTEGER},
+				</if>
+				<if test="item.UUID != null">
+					#{item.UUID,jdbcType=VARCHAR},
+				</if>
+				<if test="item.onlyType != null">
+					#{item.onlyType,jdbcType=VARCHAR},
+				</if>
+				<if test="item.countStartMonth != null">
+					#{item.countStartMonth,jdbcType=INTEGER},
+				</if>
+				<if test="item.countEndMonth != null">
+					#{item.countEndMonth,jdbcType=INTEGER},
+				</if>
+			</trim>
+		</foreach>
+	</insert>
+	<select id="countTast" resultType="java.util.Map"
+		parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		SELECT
+		sum(if(finish_ok = 1, 1, 0)) AS Finish,
+		sum(if(finish_ok is null
+		or finish_ok = 0, 1,
+		0)) AS unFinish,
+		sum(if(plant_time &lt;
+		finish_time, 1, 0)) AS
+		longFinish
+		FROM count_use
+		<where>
+			<if test="receiveUnit != null">and
+				receive_Unit=#{receiveUnit,jdbcType=INTEGER}
+			</if>
+			<if test="tastType != null">and
+				tast_type=#{tastType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByCondition" resultMap="BaseResultMap"
+		parameterType="String">
+		select *
+		from count_use
+		where
+		only_type=#{tastType,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 导出excel的数据查询 -->
+	<select id="selectByExcelPutVo" resultMap="BaseResultMap"
+		parameterType="com.zeng.zhdj.wy.entity.vo.ExcelPutVo">
+		select *
+		from count_use
+		<where>
+			1=1
+			<if test="sentId != null">
+				and sent_id=#{sentId,jdbcType=INTEGER}
+			</if>
+			<if test="endTime != null">
+				and count_end_month &lt;=#{endTime,jdbcType=INTEGER}
+			</if>
+			<if test="startTime!= null">
+				and count_start_month &gt;=#{startTime,jdbcType=INTEGER}
+			</if>
+			<if test="onlyUuid != null">
+				and only_type=#{onlyUuid,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectByCountTest" resultMap="BaseResultMap"
+		parameterType="com.zeng.zhdj.wy.entity.CountUse">
+		select *
+		from count_use
+		<where>
+			1=1
+			<if test="sentId != null">
+				and sent_id=#{sentId,jdbcType=INTEGER}
+			</if>
+			<if test="countEndMonth !=null">
+				and count_end_month
+				&lt;=#{countEndMonth,jdbcType=INTEGER}
+			</if>
+			<if test="countStartMonth !=null">
+				and count_start_month
+				&gt;=#{countStartMonth,jdbcType=INTEGER}
+			</if>
+			<if test="receiveUnit !=null">
+				and receive_unit=#{receiveUnit,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+</mapper>

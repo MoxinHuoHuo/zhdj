@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.zhdj.wy.dao.flowUserMapper">
+	<resultMap id="BaseResultMap" type="com.zeng.zhdj.wy.entity.flowUser">
+		<id column="flow_userid" property="flowUserid" jdbcType="INTEGER" />
+		<result column="flow_user_name" property="flowUserName"
+			jdbcType="VARCHAR" />
+		<result column="flow_user_information" property="flowUserInformation"
+			jdbcType="VARCHAR" />
+		<result column="flow_user_tel" property="flowUserTel" jdbcType="VARCHAR" />
+		<result column="flow_user_password" property="flowUserPassword"
+			jdbcType="VARCHAR" />
+		<result column="flow_user_create_time" property="flowUserCreateTime"
+			jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 获取权限 及用户信息 -->
+	<resultMap id="PowerGet" type="com.zeng.zhdj.wy.entity.flowUser"
+		extends="BaseResultMap">
+		<association property="role" javaType="com.zeng.zhdj.wy.entity.Role"
+			column="role_id" select="com.zeng.zhdj.wy.dao.RoleMapper.selectByPrimaryKey"></association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		flow_userid, flow_user_name, flow_user_information, flow_user_tel,
+		flow_user_password,
+		flow_user_create_time, role_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from flow_user
+		where flow_userid = #{flowUserid,jdbcType=INTEGER}
+	</select>
+	<!-- 根据条件分页查询 -->
+	<select id="selectPageList" resultMap="BaseResultMap"
+		parameterType="com.zeng.zhdj.unity.Page">
+		select
+		<include refid="Base_Column_List" />
+		from flow_user
+		<where>
+			<if test="paramEntity.flowUserName!=null">and flow_user_name=#{flowUserName,jdbcType=VARCHAR}</if>
+			<if test="paramEntity.flowUserInformation!=null">and
+				flow_user_information=#{flowUserInformation,jdbcType=VARCHAR}
+			</if>
+			<if test="paramEntity.flowUserTel!=null">and flow_user_tel=#{flowUserTel,jdbcType=VARCHAR}</if>
+
+
+
+		</where>
+		order by flow_user_create_time
+		limit #{start},#{rows}
+	</select>
+	<select id="selectByinformation" resultMap="PowerGet"
+		parameterType="com.zeng.zhdj.wy.entity.flowUser">
+		select
+		<include refid="Base_Column_List" />
+		from flow_user
+		<where>
+			<if test="flowUserInformation!=null">and flow_user_information =
+				#{flowUserInformation,jdbcType=VARCHAR}
+			</if>
+			<if test="flowUserid!=null">and flow_userid =
+				#{flowUserid,jdbcType=INTEGER}
+			</if>
+			<if test="flowUserTel!=null">and flow_user_tel=#{flowUserTel,jdbcType=VARCHAR}</if>
+			<if test="flowUserName!=null">and flow_user_name=#{flowUserName,jdbcType=VARCHAR}</if>
+
+		</where>
+
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		flow_user
+		where flow_userid = #{flowUserid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.zeng.zhdj.wy.entity.flowUser">
+		insert into flow_user
+		(flow_userid, flow_user_name,
+		flow_user_information,
+		flow_user_tel,
+		flow_user_password,
+		role_id,
+		flow_user_create_time)
+		values
+		(#{flowUserid,jdbcType=INTEGER},
+		#{flowUserName,jdbcType=VARCHAR},
+		#{flowUserInformation,jdbcType=VARCHAR},
+		#{flowUserTel,jdbcType=VARCHAR}, #{flowUserPassword,jdbcType=VARCHAR},
+		#{roleId,jdbcType=INTEGER},
+		#{flowUserCreateTime,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.zeng.zhdj.wy.entity.flowUser">
+		update flow_user
+		set flow_user_name = #{flowUserName,jdbcType=VARCHAR},
+		flow_user_information = #{flowUserInformation,jdbcType=VARCHAR},
+		flow_user_tel = #{flowUserTel,jdbcType=VARCHAR},
+		flow_user_password =
+		#{flowUserPassword,jdbcType=VARCHAR}
+		where flow_userid =
+		#{flowUserid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByallinformation" parameterType="com.zeng.zhdj.wy.entity.flowUser">
+		update flow_user
+		set
+		flow_user_password =
+		#{flowUserPassword,jdbcType=VARCHAR}
+		<where>
+			<if test="flowUserInformation!=null">and flow_user_information =
+				#{flowUserInformation,jdbcType=VARCHAR}
+			</if>
+			<if test="flowUserid!=null">and flow_userid =
+				#{flowUserid,jdbcType=INTEGER}
+			</if>
+			<if test="flowUserTel!=null">and flow_user_tel=#{flowUserTel,jdbcType=VARCHAR}</if>
+			<if test="flowUserName!=null">and flow_user_name=#{flowUserName,jdbcType=VARCHAR}</if>
+		</where>
+	</update>
+</mapper>

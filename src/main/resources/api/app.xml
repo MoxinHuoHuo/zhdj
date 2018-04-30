@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RESULT>
+	<VALUE>
+		<appId>1</appId>
+		<appName>智慧党建</appName>
+
+		<appSize>3.03</appSize>
+
+		<appVersion>1.0.0</appVersion>
+		
+		<updateUrl>http://192.168.1.106:8080/zhdj/News/listUI/pic/app-debug.apk</updateUrl>
+		
+		<updateInfo>欣喜</updateInfo>
+	</VALUE>
+</RESULT>
+<!-- private int appId; private String appName; private String appSize; private 
+	String appVersion; private String updateUrl; private String updateInfo; -->
