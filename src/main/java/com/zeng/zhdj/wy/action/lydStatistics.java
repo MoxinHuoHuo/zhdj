@@ -5,8 +5,10 @@ import com.zeng.zhdj.wy.entity.*;
 import com.zeng.zhdj.wy.service.MeetingSignService;
 import com.zeng.zhdj.wy.service.PartyMeetingService;
 import com.zeng.zhdj.wy.service.UserService;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -115,7 +117,8 @@ public class lydStatistics {
     }*/
 
     @RequestMapping("showMeetStatistics")
-    public ModelAndView showMeetStatistics(HttpServletRequest request) throws ParseException {
+    @ResponseBody
+    public JSONObject showMeetStatistics(HttpServletRequest request) throws ParseException {
 
         ModelAndView mav=new ModelAndView();
         List<PartyBranchMeeting> list = new ArrayList<PartyBranchMeeting>();
@@ -172,22 +175,24 @@ public class lydStatistics {
         System.out.println("瞧，我发现了这个---"+meetRecordList);
 
         /*List<meetRecords> meetRecordsList=assignAMeeting(meetRecordList);*/
-        Map meetRecordMap=assignAMeeting2(meetRecordList);
+        Map<String,MeetRecords> meetRecordMap=assignAMeeting2(meetRecordList);
 
         System.out.println("小老板把我搞得头皮发麻:"+meetRecordMap.toString());
 
-        //mav.addObject("meetRecordsList",meetRecordsList);
-        return mav;
+        JSONObject json=new JSONObject();
+        json.put("meetRecordMap",meetRecordMap);
+
+        return json;
     }
 
 
     //把任务分配到每个月(简洁版)
-    private Map<Integer,List<MeetRecord>> assignAMeeting2(List<MeetRecord> meetList) throws ParseException {
+    private Map<String,MeetRecords> assignAMeeting2(List<MeetRecord> meetList) throws ParseException {
 
-        Map<Integer,List<MeetRecord>> meetRecordsMap=new HashMap<>();
+        Map<String,MeetRecords> meetRecordsMap=new HashMap<>();
 
         for (int i=0;i<12;i++)
-            meetRecordsMap.put(i,new ArrayList<MeetRecord>());
+            meetRecordsMap.put(String.valueOf(i),new MeetRecords());
 
         for (MeetRecord meetRecord:meetList){
 
@@ -195,22 +200,29 @@ public class lydStatistics {
             Calendar cal=Calendar.getInstance();
             cal.setTime(date1);
 
-            Integer month=cal.get(Calendar.MONTH)+1;
+            Integer month=cal.get(Calendar.MONTH);
 
-            switch (month){
-                case 1:meetRecordsMap.get(0).add(meetRecord);break;
-                case 2:meetRecordsMap.get(1).add(meetRecord);break;
-                case 3:meetRecordsMap.get(2).add(meetRecord);break;
-                case 4:meetRecordsMap.get(3).add(meetRecord);break;
-                case 5:meetRecordsMap.get(4).add(meetRecord);break;
-                case 6:meetRecordsMap.get(5).add(meetRecord);break;
-                case 7:meetRecordsMap.get(6).add(meetRecord);break;
-                case 8:meetRecordsMap.get(7).add(meetRecord);break;
-                case 9:meetRecordsMap.get(8).add(meetRecord);break;
-                case 10:meetRecordsMap.get(9).add(meetRecord);break;
-                case 11:meetRecordsMap.get(10).add(meetRecord);break;
-                case 12:meetRecordsMap.get(11).add(meetRecord);break;
-            }
+            /*switch (month){
+                case 1:meetRecordsMap.get("0").getMeetRecordList().add(meetRecord);break;
+                case 2:meetRecordsMap.get("1").getMeetRecordList().add(meetRecord);break;
+                case 3:meetRecordsMap.get("2").getMeetRecordList().add(meetRecord);break;
+                case 4:meetRecordsMap.get("3").getMeetRecordList().add(meetRecord);break;
+                case 5:meetRecordsMap.get("4").getMeetRecordList().add(meetRecord);break;
+                case 6:meetRecordsMap.get("5").getMeetRecordList().add(meetRecord);break;
+                case 7:meetRecordsMap.get("6").getMeetRecordList().add(meetRecord);break;
+                case 8:meetRecordsMap.get("7").getMeetRecordList().add(meetRecord);break;
+                case 9:meetRecordsMap.get("8").getMeetRecordList().add(meetRecord);break;
+                case 10:meetRecordsMap.get("9").getMeetRecordList().add(meetRecord);break;
+                case 11:meetRecordsMap.get("10").getMeetRecordList().add(meetRecord);break;
+                case 12:meetRecordsMap.get("11").getMeetRecordList().add(meetRecord);break;
+            }*/
+            meetRecordsMap.get(String.valueOf(month)).getMeetRecordList().add(meetRecord);
+        }
+
+        for (String i:meetRecordsMap.keySet()){
+            MeetRecords meetRecords=meetRecordsMap.get(i);
+            meetRecords.setMeetingTimes(meetRecords.getMeetRecordList().size());
+            meetRecordsMap.put(i,meetRecords);
         }
 
         return meetRecordsMap;
