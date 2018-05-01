@@ -260,7 +260,7 @@ ol>li>ol, ol>li>ul, ul>li>ol, ul>li>ul {
 		confirmSel:function(){
 			var uName=$('#uName').val();
 			var uid=$('#hasId').val();
-			location.href="${pageContext.request.contextPath}/base/goURL/weixin/staticShowuon?uon="+uid
+			location.href="${pageContext.request.contextPath}/base/goURL/weixin/staticShowuon?unit="+uid
 		},
 						
 		set:function(){                      			//为节点设置事件
