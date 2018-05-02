@@ -208,6 +208,7 @@ public class lydStatistics {
         json.put("meetRecordMap",meetRecordMap);*/
         mav.addObject("meetingTimes",meetingTimes);
         mav.addObject("meetRecordsList",meetRecordsList);
+        mav.addObject("startTime",startTime);
 
         return mav;
     }

@@ -53,7 +53,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
           </select>
           <center><div  id="pie1" style="width: 100%;height: 300px;position: fixed;top: 30px;"></div></center>
           <a class="weui-btn weui-btn_primary" id="sure" href="javascript:;"style="background:#0e90d2;">确定</a>
-
+          <form  id="forms" method="post" action="${pageContext.request.contextPath}/lydStatistics/showMeetStatistics" style="display: none">
+              <input type="text" name="startTime" id="input1">
+              <input type="text" name="unit"id="input2">
+          </form>
       </div>
 
 
@@ -78,9 +81,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	<%-- var orgId=<%=session.getAttribute("RelUserTreeId")%>; --%>
         var pie1 = echarts.init(document.getElementById("pie1"));
             pie1.showLoading();
-          // 获取组织编号
-        var unit="<%=request.getParameter("unit")%>";
-        console.log(unit);
+
+
         //年份下拉列表
         $(function(){
             var start = 1990; // 指定开始年份
@@ -92,25 +94,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
      $("#uon").on('click',function(){
      location.href="${pageContext.request.contextPath}/base/goURL/weixin/SelectUonMet"
      });
-
+   //提交请求
       $("#sure").click(function () {
           var year=$("#agesye").find("option:selected").text();
+          // 获取组织编号
+          var unit="<%=request.getParameter("unit")%>";
           console.log(year);
           console.log(unit);
-          $.ajax({
-              type:'POST',
-              url:"${pageContext.request.contextPath}/lydStatistics/showMeetStatistics",
-              data:{
-                  unit:unit,
-                  startTime:year
-              },
-              success:function () {
-                  window.location.href="${pageContext.request.contextPath}/base/goURL/weixin/mettingchart?unit="+unit+"&startTime="+year;
-                  alert("操作成功");
-              }
-              
-              
-          })
+          $('#input1').val(year);
+          $('#input2').val(unit);
+          $('#forms').submit();
+
       })
 
 
