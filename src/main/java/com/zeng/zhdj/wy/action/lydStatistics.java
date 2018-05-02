@@ -32,24 +32,25 @@ public class lydStatistics {
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 
+
     //这个方法太笨了，不可取
-    /*//设置一个私有成员
-    private List<meetRecords> assignAMeeting(List<MeetRecord> meetList) throws ParseException {
+    //设置一个私有成员
+    private List<MeetRecords> assignAMeeting(List<MeetRecord> meetList) throws ParseException {
 
-        List<meetRecords> meetRecordList= new ArrayList(){{add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);}};
+        List<MeetRecords> meetRecordList= new ArrayList(){{add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);add(null);}};
 
-        meetRecords  meetRecords1=new meetRecords();
-        meetRecords  meetRecords2=new meetRecords();
-        meetRecords  meetRecords3=new meetRecords();
-        meetRecords  meetRecords4=new meetRecords();
-        meetRecords  meetRecords5=new meetRecords();
-        meetRecords  meetRecords6=new meetRecords();
-        meetRecords  meetRecords7=new meetRecords();
-        meetRecords  meetRecords8=new meetRecords();
-        meetRecords  meetRecords9=new meetRecords();
-        meetRecords  meetRecords10=new meetRecords();
-        meetRecords  meetRecords11=new meetRecords();
-        meetRecords  meetRecords12=new meetRecords();
+        MeetRecords  meetRecords1=new MeetRecords();
+        MeetRecords  meetRecords2=new MeetRecords();
+        MeetRecords  meetRecords3=new MeetRecords();
+        MeetRecords  meetRecords4=new MeetRecords();
+        MeetRecords  meetRecords5=new MeetRecords();
+        MeetRecords  meetRecords6=new MeetRecords();
+        MeetRecords  meetRecords7=new MeetRecords();
+        MeetRecords  meetRecords8=new MeetRecords();
+        MeetRecords  meetRecords9=new MeetRecords();
+        MeetRecords  meetRecords10=new MeetRecords();
+        MeetRecords  meetRecords11=new MeetRecords();
+        MeetRecords  meetRecords12=new MeetRecords();
 
         for (MeetRecord meetRecord:meetList){
 
@@ -76,51 +77,63 @@ public class lydStatistics {
         }
 
         if(meetRecords1.getMeetRecordList().size()!=0){
+            meetRecords1.setMeetingTimes(meetRecords1.getMeetRecordList().size());
             meetRecordList.set(0,meetRecords1);
         }
         if(meetRecords2.getMeetRecordList().size()!=0){
+            meetRecords2.setMeetingTimes(meetRecords2.getMeetRecordList().size());
             meetRecordList.set(1,meetRecords2);
         }
         if(meetRecords3.getMeetRecordList().size()!=0){
+            meetRecords3.setMeetingTimes(meetRecords3.getMeetRecordList().size());
             meetRecordList.set(2,meetRecords3);
         }
         if(meetRecords4.getMeetRecordList().size()!=0){
+            meetRecords4.setMeetingTimes(meetRecords4.getMeetRecordList().size());
             meetRecordList.set(3,meetRecords4);
         }
         if(meetRecords5.getMeetRecordList().size()!=0){
+            meetRecords5.setMeetingTimes(meetRecords5.getMeetRecordList().size());
             meetRecordList.set(4,meetRecords5);
         }
         if(meetRecords6.getMeetRecordList().size()!=0){
+            meetRecords6.setMeetingTimes(meetRecords6.getMeetRecordList().size());
             meetRecordList.set(5,meetRecords6);
         }
         if(meetRecords7.getMeetRecordList().size()!=0){
+            meetRecords7.setMeetingTimes(meetRecords7.getMeetRecordList().size());
             meetRecordList.set(6,meetRecords7);
         }
         if(meetRecords8.getMeetRecordList().size()!=0){
+            meetRecords8.setMeetingTimes(meetRecords8.getMeetRecordList().size());
             meetRecordList.set(7,meetRecords8);
         }
         if(meetRecords9.getMeetRecordList().size()!=0){
+            meetRecords9.setMeetingTimes(meetRecords9.getMeetRecordList().size());
             meetRecordList.set(8,meetRecords9);
         }
         if(meetRecords10.getMeetRecordList().size()!=0){
+            meetRecords10.setMeetingTimes(meetRecords10.getMeetRecordList().size());
             meetRecordList.set(9,meetRecords10);
         }
         if(meetRecords11.getMeetRecordList().size()!=0){
+            meetRecords11.setMeetingTimes(meetRecords11.getMeetRecordList().size());
             meetRecordList.set(10,meetRecords11);
         }
         if(meetRecords12.getMeetRecordList().size()!=0){
+            meetRecords12.setMeetingTimes(meetRecords12.getMeetRecordList().size());
             meetRecordList.set(11,meetRecords12);
         }
 
 
         return meetRecordList;
-    }*/
+    }
 
     @RequestMapping("showMeetStatistics")
     @ResponseBody
-    public JSONObject showMeetStatistics(HttpServletRequest request) throws ParseException {
+    public ModelAndView showMeetStatistics(HttpServletRequest request) throws ParseException {
 
-        ModelAndView mav=new ModelAndView();
+        ModelAndView mav=new ModelAndView("weixin/mettingchart");
         List<PartyBranchMeeting> list = new ArrayList<PartyBranchMeeting>();
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -174,15 +187,29 @@ public class lydStatistics {
         }
         System.out.println("瞧，我发现了这个---"+meetRecordList);
 
-        /*List<meetRecords> meetRecordsList=assignAMeeting(meetRecordList);*/
-        Map<String,MeetRecords> meetRecordMap=assignAMeeting2(meetRecordList);
+        List<MeetRecords> meetRecordsList=assignAMeeting(meetRecordList);
+
+        System.out.println("小老板把我搞得头皮发麻:"+meetRecordsList.toString());
+
+        List<Integer> meetingTimes=new ArrayList<>();
+
+        for (MeetRecords meetRecords:meetRecordsList) {
+            if (meetRecords!=null)
+                meetingTimes.add(meetRecords.getMeetingTimes());
+            else
+                meetingTimes.add(0);
+        }
+        System.out.println("一年会议的次数:"+meetingTimes);
+        /*Map<String,MeetRecords> meetRecordMap=assignAMeeting2(meetRecordList);
 
         System.out.println("小老板把我搞得头皮发麻:"+meetRecordMap.toString());
 
         JSONObject json=new JSONObject();
-        json.put("meetRecordMap",meetRecordMap);
+        json.put("meetRecordMap",meetRecordMap);*/
+        mav.addObject("meetingTimes",meetingTimes);
+        mav.addObject("meetRecordsList",meetRecordsList);
 
-        return json;
+        return mav;
     }
 
 
@@ -202,20 +229,6 @@ public class lydStatistics {
 
             Integer month=cal.get(Calendar.MONTH);
 
-            /*switch (month){
-                case 1:meetRecordsMap.get("0").getMeetRecordList().add(meetRecord);break;
-                case 2:meetRecordsMap.get("1").getMeetRecordList().add(meetRecord);break;
-                case 3:meetRecordsMap.get("2").getMeetRecordList().add(meetRecord);break;
-                case 4:meetRecordsMap.get("3").getMeetRecordList().add(meetRecord);break;
-                case 5:meetRecordsMap.get("4").getMeetRecordList().add(meetRecord);break;
-                case 6:meetRecordsMap.get("5").getMeetRecordList().add(meetRecord);break;
-                case 7:meetRecordsMap.get("6").getMeetRecordList().add(meetRecord);break;
-                case 8:meetRecordsMap.get("7").getMeetRecordList().add(meetRecord);break;
-                case 9:meetRecordsMap.get("8").getMeetRecordList().add(meetRecord);break;
-                case 10:meetRecordsMap.get("9").getMeetRecordList().add(meetRecord);break;
-                case 11:meetRecordsMap.get("10").getMeetRecordList().add(meetRecord);break;
-                case 12:meetRecordsMap.get("11").getMeetRecordList().add(meetRecord);break;
-            }*/
             meetRecordsMap.get(String.valueOf(month)).getMeetRecordList().add(meetRecord);
         }
 
